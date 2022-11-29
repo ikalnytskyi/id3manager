@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "id3manager"
+description = "The ID3 metadata manager for MP3 files."
+readme = "README.md"
+requires-python = ">=3.7"
+license = "MIT"
+keywords = ["id3", "mp3", "audio", "tags", "metadata"]
+authors = [
+  { name = "Ihor Kalnytskyi", email = "ihor@kalnytskyi.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "mutagen >= 1.46.0",
+]
+dynamic = ["version"]
+
+[project.urls]
+Documentation = "https://github.com/ikalnytskyi/id3manager#readme"
+Issues = "https://github.com/ikalnytskyi/id3manager/issues"
+Source = "https://github.com/ikalnytskyi/id3manager"
+
+[project.scripts]
+id3manager = "id3manager:main"
+
+[tool.hatch.version]
+source = "vcs"
