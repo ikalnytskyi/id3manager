@@ -1,13 +1,17 @@
 import argparse
 import mimetypes
+import os
 import re
+import subprocess
 import sys
+import tempfile
 import typing as t
 
 import mutagen.mp3 as mp3
 import mutagen.id3 as id3
 
 
+EDITOR = os.environ.get('EDITOR', 'vi')
 ID3Frame = id3.Frame
 
 
@@ -149,7 +153,7 @@ def sec_to_ms(sec: float):
     return int(sec * 1000)
 
 
-def get_subcommand_entrypoint(args):
+def get_subcommand_entrypoint(args, file=sys.stdout):
     audio_mp3 = mp3.MP3(args.audio, ID3=ID3SourceFrameOrder)
 
     frames = [frame for frame in audio_mp3.tags.values() if frame.FrameID not in {"CHAP", "CTOC"}]
@@ -162,20 +166,20 @@ def get_subcommand_entrypoint(args):
             value = frame.url
         else:
             raise ValueError(f"{frame.FrameID}: unsupported frame")
-        print(frame.FrameID, "=", value)
+        print(frame.FrameID, "=", value, file=file)
     
     if not chapters:
         return
-    print()
+    print(file=file)
 
     for chapter in chapters:
         text = chapter.sub_frames["TIT2"].text[0]
-        print(ms_to_human_time(chapter.start_time), text)
+        print(ms_to_human_time(chapter.start_time), text, file=file)
 
 
-def set_subcommand_entrypoint(args):
+def set_subcommand_entrypoint(args, file=None):
     audio_mp3 = mp3.MP3(args.audio, ID3=ID3SourceFrameOrder)
-    frames = parse_metadata(args.metadata, audio_len=audio_mp3.info.length)
+    frames = parse_metadata(file or args.metadata, audio_len=audio_mp3.info.length)
 
     if audio_mp3.tags is None:
         audio_mp3.add_tags(ID3=ID3SourceFrameOrder)
@@ -184,6 +188,18 @@ def set_subcommand_entrypoint(args):
     for frame in frames:
         audio_mp3.tags.add(frame)
     audio_mp3.save(args.audio)
+
+
+def edit_subcommand_entrypoint(args):
+    with tempfile.NamedTemporaryFile(mode="w+t") as fp:
+        get_subcommand_entrypoint(args, file=fp)
+        fp.flush()
+
+        process = subprocess.Popen([EDITOR, fp.name])
+        process.wait()
+
+        fp.seek(0)
+        set_subcommand_entrypoint(args, file=fp)
 
 
 def main(argv=sys.argv[1:]):
@@ -215,6 +231,15 @@ def main(argv=sys.argv[1:]):
         help="the metadata file to set",
     )
     parser_set.set_defaults(subcommand=set_subcommand_entrypoint)
+
+    parser_edit = subparsers.add_parser("edit", help="interactively edit ID3 metadata")
+    parser_edit.add_argument(
+        "audio",
+        metavar="audio.mp3",
+        type=argparse.FileType("rb+"),
+        help="the audio file to edit metadata in",
+    )
+    parser_edit.set_defaults(subcommand=edit_subcommand_entrypoint)
 
     args = parser.parse_args(argv)
     return args.subcommand(args)
