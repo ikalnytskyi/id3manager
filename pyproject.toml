@@ -38,3 +38,16 @@ id3manager = "id3manager:main"
 
 [tool.hatch.version]
 source = "vcs"
+
+[tool.hatch.envs.test]
+dependencies = [
+  "pytest >= 7.2.0",
+]
+scripts.run = "python -m pytest {args:-vv}"
+
+[tool.hatch.envs.lint]
+detached = true
+dependencies = [
+  "pre-commit >= 2.20.0",
+]
+scripts.run = "python -m pre_commit run --all-files --show-diff-on-failure"

@@ -7,11 +7,10 @@ import sys
 import tempfile
 import typing as t
 
-import mutagen.mp3 as mp3
 import mutagen.id3 as id3
+import mutagen.mp3 as mp3
 
-
-EDITOR = os.environ.get('EDITOR', 'vi')
+EDITOR = os.environ.get("EDITOR", "vi")
 ID3Frame = id3.Frame
 
 
@@ -67,12 +66,11 @@ def parse_metadata_frames(frames_txt: str) -> t.List[ID3Frame]:
             match value.split(maxsplit=1):
                 case [picture_type, picture]:
                     picture_type = int(picture_type.split(":")[1])
-            
+
             if picture.startswith("http"):
                 mime = "-->"
                 picture = picture.encode("utf-8")
             elif picture.startswith("file:"):
-                import pathlib
                 mime = mimetypes.guess_type(picture)[0]
                 picture = open(picture.lstrip("file:"), "rb").read()
 
@@ -135,7 +133,7 @@ def parse_timestamp_to_ms(timestamp: str, sep: str = ":") -> float:
 
 
 def ms_to_human_time(ms: int) -> str:
-    hrs = int(ms / (60  * 60 * 1000))
+    hrs = int(ms / (60 * 60 * 1000))
     ms -= hrs * 60 * 60 * 1000
 
     min = int(ms / (60 * 1000))
@@ -149,6 +147,7 @@ def ms_to_human_time(ms: int) -> str:
         hhmmss = f"{hhmmss}.{ms:03}"
     return hhmmss
 
+
 def sec_to_ms(sec: float):
     return int(sec * 1000)
 
@@ -156,7 +155,11 @@ def sec_to_ms(sec: float):
 def get_subcommand_entrypoint(args, file=sys.stdout):
     audio_mp3 = mp3.MP3(args.audio, ID3=ID3SourceFrameOrder)
 
-    frames = [frame for frame in audio_mp3.tags.values() if frame.FrameID not in {"CHAP", "CTOC"}]
+    frames = [
+        frame
+        for frame in audio_mp3.tags.values()
+        if frame.FrameID not in {"CHAP", "CTOC"}
+    ]
     chapters = [frame for frame in audio_mp3.tags.values() if frame.FrameID in {"CHAP"}]
 
     for frame in frames:
@@ -167,7 +170,7 @@ def get_subcommand_entrypoint(args, file=sys.stdout):
         else:
             raise ValueError(f"{frame.FrameID}: unsupported frame")
         print(frame.FrameID, "=", value, file=file)
-    
+
     if not chapters:
         return
     print(file=file)
