@@ -12,6 +12,7 @@ $ pipx install id3manager
 $ id3manager get шопокоду-E01.mp3 > metadata.txt    # get audio metadata
 $ nvim metadata.txt                                 # update the metadata
 $ id3manager set шопокоду-E01.mp3 metadata.txt      # set audio metadata
+$ id3manager edit шопокоду-E01.mp3                  # to edit metadata interactively using $EDITOR
 ```
 
 The `metadata.txt` could look like this:
