@@ -63,9 +63,9 @@ def parse_metadata_frames(frames_txt: str) -> t.List[ID3Frame]:
         elif issubclass(frame_cls, id3.UrlFrame):
             frame = frame_cls(url=value)
         elif frame_cls is id3.APIC:
-            match value.split(maxsplit=1):
-                case [picture_type, picture]:
-                    picture_type = int(picture_type.split(":")[1])
+            picture_parts = value.split(maxsplit=1)
+            picture_type, picture = picture_parts
+            picture_type = int(picture_type.split(":")[1])
 
             if picture.startswith("http"):
                 mime = "-->"
@@ -154,6 +154,8 @@ def sec_to_ms(sec: float):
 
 def get_subcommand_entrypoint(args, file=sys.stdout):
     audio_mp3 = mp3.MP3(args.audio, ID3=ID3SourceFrameOrder)
+    if audio_mp3.tags is None:
+        return
 
     frames = [
         frame
@@ -180,7 +182,7 @@ def get_subcommand_entrypoint(args, file=sys.stdout):
         print(ms_to_human_time(chapter.start_time), text, file=file)
 
 
-def set_subcommand_entrypoint(args, file=None):
+def set_subcommand_entrypoint(args, file=sys.stdin):
     audio_mp3 = mp3.MP3(args.audio, ID3=ID3SourceFrameOrder)
     frames = parse_metadata(file or args.metadata, audio_len=audio_mp3.info.length)
 
@@ -226,12 +228,6 @@ def main(argv=sys.argv[1:]):
         metavar="audio.mp3",
         type=argparse.FileType("rb+"),
         help="the audio file to set metadata in",
-    )
-    parser_set.add_argument(
-        "metadata",
-        metavar="metadata.txt",
-        type=argparse.FileType("rt", encoding="UTF-8"),
-        help="the metadata file to set",
     )
     parser_set.set_defaults(subcommand=set_subcommand_entrypoint)
 
