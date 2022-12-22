@@ -25,6 +25,7 @@ classifiers = [
 ]
 dependencies = [
   "mutagen >= 1.46.0",
+  "tomlkit >= 0.11.6",
 ]
 dynamic = ["version"]
 
@@ -34,7 +35,7 @@ Issues = "https://github.com/ikalnytskyi/id3manager/issues"
 Source = "https://github.com/ikalnytskyi/id3manager"
 
 [project.scripts]
-id3manager = "id3manager:main"
+id3manager = "id3manager.__main__:main"
 
 [tool.hatch.version]
 source = "vcs"
