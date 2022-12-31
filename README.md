@@ -42,6 +42,41 @@ WORS = https://xn--d1allabd6a7a.xn--j1amh
 01:00:45 Висновок
 ```
 
+Alternative metadata formats can be selected by passing `--format` (or `-f`), e.g.:
+
+```console
+$ id3manager --format toml get шопокоду-E01.mp3 > metadata.toml    # get audio metadata as TOML
+```
+
+Which produces an output like:
+
+```toml
+[[TIT2]]
+text = "Обробка помилок"
+
+[[TPE1]]
+text = "Ігор, Роман"
+
+[[TRCK]]
+text = "14/14"
+
+[[TALB]]
+text = "Шо по коду?"
+
+[[TDRC]]
+text = "2022-11-27"
+
+[[TCON]]
+text = "Podcast"
+
+[[TSSE]]
+text = "Lavf59.27.100"
+
+[[CHAP]]
+text = "Початок"
+timestamp = "00:00:00"
+```
+
 ## Frames
 
 Most commonly used ID3 frames are supported. The complete list of
