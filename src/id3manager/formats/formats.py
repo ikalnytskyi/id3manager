@@ -4,7 +4,6 @@ from .abc import MetadataFormatter
 from .text import TextMetadataFormatter
 from .toml import TomlMetadataFormatter
 
-
 FORMATTERS = {
     formatter.name: formatter
     for formatter in [TextMetadataFormatter(), TomlMetadataFormatter()]

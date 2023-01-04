@@ -5,7 +5,6 @@ import mutagen.id3 as id3
 from . import utils
 from .formats import get_metadata_formatter
 
-
 __all__ = [
     "read_metadata",
     "write_metadata",
