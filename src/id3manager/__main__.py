@@ -6,9 +6,7 @@ import tempfile
 
 import mutagen.mp3 as mp3
 
-from . import metadata
-from . import formats
-
+from . import formats, metadata
 
 EDITOR = os.environ.get("EDITOR", "vi")
 
