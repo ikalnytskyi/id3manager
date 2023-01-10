@@ -1,8 +1,8 @@
-def parse_timestamp_to_ms(timestamp: str, sep: str = ":") -> float:
+def parse_timestamp_to_ms(timestamp: str, sep: str = ":") -> int:
     parts = [float(part) for part in timestamp.split(sep)]
     parts = [0] * (3 - len(parts)) + parts
     hrs, min, sec = parts
-    return hrs * 60 * 60 + min * 60 + sec
+    return int((hrs * 60 * 60 + min * 60 + sec) * 1000)
 
 
 def ms_to_human_time(ms: int) -> str:
