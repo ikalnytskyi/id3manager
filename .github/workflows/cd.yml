@@ -3,7 +3,7 @@ name: CD
 on:
   push:
     tags:
-      - "[1-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   pypi:
@@ -30,4 +30,4 @@ jobs:
           python -m build
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@a56da0b891b3dc519c7ee3284aff1fad93cc8598
+        uses: pypa/gh-action-pypi-publish@release/v1
