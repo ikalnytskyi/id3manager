@@ -29,6 +29,7 @@ TENC = Шо по коду?
 TCON = Podcast
 TLAN = ukr
 WORS = https://xn--d1allabd6a7a.xn--j1amh
+APIC = https://github.com/shopokodu/community/blob/main/assets/logo-square-day.svg
 
 00:00:00 Початок
 00:02:00 Помилка на мільярд доларів
@@ -82,6 +83,7 @@ timestamp = "00:00:00"
 Most commonly used ID3 frames are supported. The complete list of
 supported/unsupported frames could be found below.
 
+- [X] APIC
 - [x] CHAP
 - [x] CTOC
 - [x] TBPM
@@ -230,7 +232,6 @@ supported/unsupported frames could be found below.
 - [ ] RVA
 - [ ] RVRB
 - [ ] REV
-- [ ] APIC
 - [ ] PIC
 - [ ] PCNT
 - [ ] CNT
